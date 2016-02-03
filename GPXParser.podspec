@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'GPXParser'
-  s.version      = '1.1'
+  s.version      = '1.2'
   s.summary      = 'Parse GPX & TCX files for iOS applications.'
   s.homepage     = 'https://github.com/fousa/gpx-parser-ios'
   s.license = { :type => 'MIT', :text => <<-LICENSE
