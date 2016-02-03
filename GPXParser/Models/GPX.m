@@ -9,27 +9,70 @@
 #import "GPX.h"
 
 @implementation GPX
-@synthesize tracks=_tracks;
-@synthesize routes=_routes;
-@synthesize waypoints=_waypoints;
-@synthesize filename=_filename;
-@synthesize region=_region;
 
-#pragma mark - Initialization
+@synthesize region = _region;
 
-- (id)init {
-    if (self = [super init]) {
-        self.tracks    = [NSMutableArray array];
-        self.routes    = [NSMutableArray array];
-        self.waypoints = [NSMutableArray array];
+#pragma mark - Static
+
++(instancetype)gpxWithWaypoints:(NSArray<Waypoint *> *)waypoints tracks:(NSArray<Track *> *)tracks andRoutes:(NSArray<Track *> *)routes{
+    return [self gpxWithWaypoints:waypoints tracks:tracks routes:routes andFilename:nil];
+}
+
++(instancetype)gpxWithWaypoints:(NSArray<Waypoint *> *)waypoints tracks:(NSArray<Track *> *)tracks routes:(NSArray<Track *> *)routes andFilename:(NSString *)filename {
+    GPX *instance = [GPX new];
+    instance.waypoints = waypoints;
+    instance.tracks = tracks;
+    instance.routes = routes;
+    instance.filename = filename;
+    return instance;
+}
+
+#pragma mark - Properties
+
+-(MKCoordinateRegion)region {
+    if(!CLLocationCoordinate2DIsValid(_region.center)) {
+        __block CLLocationDegrees minLat = 90.0;
+        __block CLLocationDegrees maxLat = -90.0;
+        __block CLLocationDegrees minLon = 180.0;
+        __block CLLocationDegrees maxLon = -180.0;
+
+        [self collectCoordinates:^(CLLocationCoordinate2D coordinate) {
+            minLat = MIN(minLat, coordinate.latitude);
+            minLon = MIN(minLon, coordinate.longitude);
+            maxLat = MAX(maxLat, coordinate.latitude);
+            maxLon = MAX(maxLon, coordinate.longitude);
+        }];
+
+        const MKCoordinateSpan span = MKCoordinateSpanMake(maxLat - minLat, maxLon - minLon);
+        const CLLocationCoordinate2D center = CLLocationCoordinate2DMake((maxLat - span.latitudeDelta / 2.),
+                                                                         (maxLon - span.longitudeDelta / 2.));
+        _region = MKCoordinateRegionMake(center, span);
     }
-    return self;
+    return _region;
 }
 
 #pragma mark - String
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"<GPX (tracks %i routes %i waypoints %i)>", _tracks.count, _routes.count, _waypoints.count];
+}
+
+#pragma mark - Helpers
+
+-(void)collectCoordinates:(void(^)(CLLocationCoordinate2D coordinate))collector {
+    for(Waypoint *waypoint in self.waypoints) {
+        collector(waypoint.coordinate);
+    }
+    for(Track *track in self.tracks) {
+        for(Fix *fix in track.fixes) {
+            collector(fix.coordinate);
+        }
+    }
+    for(Track *route in self.routes) {
+        for(Fix *fix in route.fixes) {
+            collector(fix.coordinate);
+        }
+    }
 }
 
 @end

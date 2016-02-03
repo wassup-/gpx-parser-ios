@@ -6,12 +6,13 @@
 //  Copyright (c) 2012 fousa. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
+#import <Foundation/Foundation.h>
 
 @interface Fix : NSObject
-@property (nonatomic, assign) double latitude;
-@property (nonatomic, assign) double longitude;
 
-- (CLLocationCoordinate2D)coordinate;
+@property (nonatomic, assign) CLLocationDegrees latitude;
+@property (nonatomic, assign) CLLocationDegrees longitude;
+@property (nonatomic, assign) CLLocationCoordinate2D coordinate;
+
 @end

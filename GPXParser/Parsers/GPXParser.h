@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 fousa. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 #import "Parser.h"
+
+#import <Foundation/Foundation.h>
 
 @interface GPXParser : Parser
 @end

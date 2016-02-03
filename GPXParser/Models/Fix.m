@@ -9,19 +9,29 @@
 #import "Fix.h"
 
 @implementation Fix
-@synthesize latitude=_latitude;
-@synthesize longitude=_longitude;
 
-#pragma mark - Coordinate
+#pragma mark - Coordinates
 
-- (CLLocationCoordinate2D)coordinate {
-    return CLLocationCoordinate2DMake(_latitude, _longitude);
+-(CLLocationDegrees)latitude {
+    return self.coordinate.latitude;
+}
+
+-(void)setLatitude:(CLLocationDegrees)latitude {
+    self.coordinate.latitude = latitude;
+}
+
+-(CLLocationDegrees)longitude {
+    return self.coordinate.longitude;
+}
+
+-(void)setLongitude:(CLLocationDegrees)longitude {
+    self.coordinate.longitude = longitude;
 }
 
 #pragma mark - String
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<Fix (%f %f)>", _latitude, _longitude];
+    return [NSString stringWithFormat:@"<Fix (%f %f)>", self.latitude, self.longitude];
 }
 
 @end

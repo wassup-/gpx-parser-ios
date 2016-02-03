@@ -6,13 +6,20 @@
 //  Copyright (c) 2012 fousa. All rights reserved.
 //
 
+#import "Fix.h"
+
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 
 @interface Track : NSObject
-@property (nonatomic, strong) NSMutableArray *fixes;
-@property (nonatomic, strong) MKPolyline *path;
-@property (nonatomic, strong) MKPolyline *shadowPath;
 
-@property (nonatomic, assign) MKCoordinateRegion region;
+@property (nonatomic, strong) NSArray<Fix *> *fixes;
+
+@property (nonatomic, readonly) MKPolyline *path;
+
+@property (nonatomic, readonly) CLLocationDistance distance;
+@property (nonatomic, readonly) MKCoordinateRegion region;
+
++(instancetype)trackWithFixes:(NSArray<Fix *> *)fixes;
+
 @end

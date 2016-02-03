@@ -10,11 +10,15 @@
 #import <MapKit/MapKit.h>
 
 @interface GPX : NSObject
-@property (nonatomic, strong) NSMutableArray *waypoints;
-@property (nonatomic, strong) NSMutableArray *tracks;
-@property (nonatomic, strong) NSMutableArray *routes;
+
+@property (nonatomic, strong) NSArray<Waypoint *> *waypoints;
+@property (nonatomic, strong) NSArray<Track *> *tracks;
+@property (nonatomic, strong) NSArray<Track *> *routes;
 @property (nonatomic, strong) NSString *filename;
 
-@property (nonatomic, assign) MKCoordinateRegion region;
-@property (nonatomic, assign) double distance;
+@property (nonatomic, readonly) MKCoordinateRegion region;
+
++(instancetype)gpxWithWaypoints:(NSArray<Waypoint *> *)waypoints tracks:(NSArray<Track *> *)tracks andRoutes:(NSArray<Track *> *)routes;
++(instancetype)gpxWithWaypoints:(NSArray<Waypoint *> *)waypoints tracks:(NSArray<Track *> *)tracks routes:(NSArray<Track *> *)routes andFilename:(NSString *)filename;
+
 @end

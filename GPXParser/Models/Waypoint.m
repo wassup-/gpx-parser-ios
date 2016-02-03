@@ -9,8 +9,6 @@
 #import "Waypoint.h"
 
 @implementation Waypoint
-@synthesize name=_name;
-@synthesize type=_type;
 
 #pragma mark - String
 

@@ -6,11 +6,13 @@
 //  Copyright (c) 2012 fousa. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 #import "Fix.h"
 
+#import <Foundation/Foundation.h>
+
 @interface Waypoint : Fix
+
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *type;
+
 @end
