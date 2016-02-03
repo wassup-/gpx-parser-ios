@@ -22,6 +22,14 @@
 
 @implementation GPXParser
 
+-(instancetype)init {
+	self = [super init];
+	self.waypoints = [NSMutableArray new];
+	self.tracks = [NSMutableArray new];
+	self.routes = [NSMutableArray new];
+	return self;
+}
+
 #pragma mark - XML Parser
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
@@ -31,9 +39,9 @@
 	}
 
     // Track point
-    if ([elementName isEqualToString:@"trkpt"] && self.track) {
-        self.trackFixes addObject:[Fix fixWithLatitude: [[attributeDict objectForKey:@"lat"] doubleValue]
-                                          andLongitude: [[attributeDict objectForKey:@"lon"] doubleValue]];
+    if ([elementName isEqualToString:@"trkpt"]) {
+        [self.trackFixes addObject:[Fix fixWithLatitude: [[attributeDict objectForKey:@"lat"] doubleValue]
+											 longitude: [[attributeDict objectForKey:@"lon"] doubleValue]]];
 	}
 
     // Waypoint
@@ -54,22 +62,22 @@
 	}
 
     // Route point
-    if ([elementName isEqualToString:@"rtept"] && self.route) {
-		self.routeFixes addObject:[Fix fixWithLatitude: [[attributeDict objectForKey:@"lat"] doubleValue]
-                                          andLongitude: [[attributeDict objectForKey:@"lon"] doubleValue]];
+    if ([elementName isEqualToString:@"rtept"]) {
+		[self.routeFixes addObject:[Fix fixWithLatitude: [[attributeDict objectForKey:@"lat"] doubleValue]
+											 longitude: [[attributeDict objectForKey:@"lon"] doubleValue]]];
 	}
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
     // End track
-    if([elementName isEqualToString:@"trk"] && self.track) {
+    if([elementName isEqualToString:@"trk"]) {
         [self.tracks addObject:[Track trackWithFixes:self.trackFixes]];
         self.trackFixes = nil;
         return;
     }
 
     // End track point
-    if([elementName isEqualToString:@"trkpt"] && self.fix && self.track) {
+    if([elementName isEqualToString:@"trkpt"]) {
         // TODO ?
         return;
     }
@@ -88,14 +96,14 @@
     }
 
     // End track
-    if([elementName isEqualToString:@"rte"] && self.route) {
+    if([elementName isEqualToString:@"rte"]) {
         [self.routes addObject:[Track trackWithFixes:self.routeFixes]];
         self.routeFixes = nil;
         return;
     }
 
     // End Route point
-    if([elementName isEqualToString:@"rtept"] && self.fix && self.route) {
+    if([elementName isEqualToString:@"rtept"]) {
         // TODO ?
         return;
     }

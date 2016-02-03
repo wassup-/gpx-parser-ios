@@ -15,12 +15,12 @@
 #import "Track.h"
 #import "Waypoint.h"
 
-@interface Parser : NSObject <NSXMLParserDelegate>
+@interface Parser : NSObject<NSXMLParserDelegate>
 
 @property (nonatomic, strong) GPX *gpx;
 @property (nonatomic, strong) NSMutableString *currentString;
-@property (nonatomic, copy) void (^callback)(BOOL success, GPX *gpx);
 
-+ (void)parse:(NSData *)data completion:(void(^)(BOOL success, GPX *gpx))completionHandler;
++(void)parse:(NSData *)data completion:(void(^)(GPX *gpx, NSError *error))completion;
++(void)parseInBackground:(NSData *)data completion:(void(^)(GPX *gpx, NSError *error))completion;
 
 @end

@@ -54,9 +54,9 @@ static CLLocationDistance const kInvalidDistance = -1;
 
 -(MKPolyline *)path {
     if(!_path) {
-        CLLocationCoordinate *coordinates = malloc(sizeof(CLLocationCoordinate) * self.fixes.count);
+        CLLocationCoordinate2D *coordinates = malloc(sizeof(CLLocationCoordinate2D) * self.fixes.count);
         for(NSUInteger i = 0; i < self.fixes.count; ++i) {
-            coordinates[i] = self.fixes[i];
+            coordinates[i] = self.fixes[i].coordinate;
         }
         _path = [MKPolyline polylineWithCoordinates:coordinates count: self.fixes.count];
         free(coordinates);

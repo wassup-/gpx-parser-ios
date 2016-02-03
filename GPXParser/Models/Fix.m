@@ -10,6 +10,18 @@
 
 @implementation Fix
 
+#pragma mark - Static
+
++(instancetype)fixWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude {
+	return [self fixWithCoordinate:CLLocationCoordinate2DMake(latitude, longitude)];
+}
+
++(instancetype)fixWithCoordinate:(CLLocationCoordinate2D)coordinate {
+	Fix *instance = [Fix new];
+	instance.coordinate = coordinate;
+	return instance;
+}
+
 #pragma mark - Coordinates
 
 -(CLLocationDegrees)latitude {
@@ -17,7 +29,7 @@
 }
 
 -(void)setLatitude:(CLLocationDegrees)latitude {
-    self.coordinate.latitude = latitude;
+    _coordinate.latitude = latitude;
 }
 
 -(CLLocationDegrees)longitude {
@@ -25,7 +37,7 @@
 }
 
 -(void)setLongitude:(CLLocationDegrees)longitude {
-    self.coordinate.longitude = longitude;
+    _coordinate.longitude = longitude;
 }
 
 #pragma mark - String

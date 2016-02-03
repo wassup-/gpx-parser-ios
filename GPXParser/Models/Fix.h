@@ -15,4 +15,7 @@
 @property (nonatomic, assign) CLLocationDegrees longitude;
 @property (nonatomic, assign) CLLocationCoordinate2D coordinate;
 
++(instancetype)fixWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude;
++(instancetype)fixWithCoordinate:(CLLocationCoordinate2D)coordinate;
+
 @end

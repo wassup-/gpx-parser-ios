@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 
+@class Waypoint;
+@class Track;
+
 @interface GPX : NSObject
 
 @property (nonatomic, strong) NSArray<Waypoint *> *waypoints;

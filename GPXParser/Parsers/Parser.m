@@ -12,8 +12,7 @@
 
 @interface Parser ()
 
-- (void)parse:(NSData *)data completion:(void(^)(BOOL success, GPX *gpx))completionHandler;
-- (void)generatePaths;
+@property (nonatomic, copy) void (^callback)(GPX *gpx, NSError *error);
 
 @end
 
@@ -21,18 +20,17 @@
 
 @synthesize gpx = _gpx;
 @synthesize currentString = _currentString;
-@synthesize callback = _callback;
 
 #pragma mark Initialization
 
-+ (void)parse:(NSData *)data completion:(void(^)(BOOL success, GPX *gpx))completionHandler {
-    [[self new] parse:data completion:completionHandler];
++ (void)parse:(NSData *)data completion:(void(^)(GPX *, NSError *))completion {
+    [[self new] parse:data completion:completion];
 }
 
 #pragma mark - Parsing
 
-- (void)parse:(NSData *)data completion:(void(^)(BOOL success, GPX *gpx))completionHandler {
-    self.callback = completionHandler;
+- (void)parse:(NSData *)data completion:(void(^)(GPX *, NSError *))completion {
+    self.callback = completion;
 
     NSXMLParser *_parser = [[NSXMLParser alloc] initWithData:data];
     [_parser setDelegate:self];
@@ -40,6 +38,17 @@
     [_parser setShouldReportNamespacePrefixes:NO];
     [_parser setShouldResolveExternalEntities:NO];
     [_parser parse];
+}
+
++(void)parseInBackground:(NSData *)data completion:(void (^)(GPX *, NSError *))completion {
+	dispatch_queue_t background_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	dispatch_async(background_queue, ^{
+		[self parse:data completion:^(GPX *gpx, NSError *error) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				completion(gpx, error);
+			});
+		}];
+	});
 }
 
 #pragma mark - XML Parser
@@ -52,13 +61,13 @@
 
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
     dispatch_async(dispatch_get_main_queue(), ^{
-        _callback(NO, nil);
+        _callback(self.gpx, parseError);
     });
 }
 
 - (void)parser:(NSXMLParser *)parser validationErrorOccurred:(NSError *)validError {
     dispatch_async(dispatch_get_main_queue(), ^{
-        _callback(NO, nil);
+        _callback(self.gpx, validError);
     });
 }
 
@@ -68,7 +77,7 @@
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
     dispatch_async(dispatch_get_main_queue(), ^{
-        _callback(YES, self.gpx);
+        _callback(self.gpx, nil);
     });
 }
 

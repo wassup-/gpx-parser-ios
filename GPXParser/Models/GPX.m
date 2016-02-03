@@ -7,6 +7,8 @@
 //
 
 #import "GPX.h"
+#import "Track.h"
+#import "Waypoint.h"
 
 @implementation GPX
 
