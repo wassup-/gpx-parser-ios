@@ -26,6 +26,7 @@
     instance.tracks = tracks;
     instance.routes = routes;
     instance.filename = filename;
+    instance->_region = MKCoordinateRegionMake(kCLLocationCoordinate2DInvalid, MKCoordinateSpanMake(0, 0));
     return instance;
 }
 
@@ -46,8 +47,8 @@
         }];
 
         const MKCoordinateSpan span = MKCoordinateSpanMake(maxLat - minLat, maxLon - minLon);
-        const CLLocationCoordinate2D center = CLLocationCoordinate2DMake((maxLat - span.latitudeDelta / 2.),
-                                                                         (maxLon - span.longitudeDelta / 2.));
+        const CLLocationCoordinate2D center = CLLocationCoordinate2DMake((minLat + maxLat) / 2.,
+                                                                         (minLon + maxLon) / 2.);
         _region = MKCoordinateRegionMake(center, span);
     }
     return _region;
