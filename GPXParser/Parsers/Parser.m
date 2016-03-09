@@ -42,8 +42,10 @@
 
 +(void)parseInBackground:(NSData *)data completion:(void (^)(GPX *, NSError *))completion {
 	dispatch_queue_t background_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	__weak __typeof__(self) self_weak_ = self;
 	dispatch_async(background_queue, ^{
-		[self parse:data completion:^(GPX *gpx, NSError *error) {
+		__strong __typeof__(self) self_strong_ = self_weak_;
+		[self_strong_ parse:data completion:^(GPX *gpx, NSError *error) {
 			dispatch_async(dispatch_get_main_queue(), ^{
 				completion(gpx, error);
 			});
@@ -60,14 +62,18 @@
 }
 
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
+	__weak __typeof__(self) self_weak_ = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        _callback(self.gpx, parseError);
+		__strong __typeof__(self) self_strong_ = self_weak_;
+        _callback(self_strong_.gpx, parseError);
     });
 }
 
 - (void)parser:(NSXMLParser *)parser validationErrorOccurred:(NSError *)validError {
+	__weak __typeof__(self) self_weak_ = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        _callback(self.gpx, validError);
+		__strong __typeof__(self) self_strong_ = self_weak_;
+        _callback(self_strong_.gpx, validError);
     });
 }
 
@@ -76,7 +82,9 @@
 }
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
+	__weak __typeof__(self) self_weak_ = self;
     dispatch_async(dispatch_get_main_queue(), ^{
+		__strong __typeof__(self) self_strong_ = self_weak_;
         _callback(self.gpx, nil);
     });
 }
