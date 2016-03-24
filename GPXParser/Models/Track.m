@@ -93,8 +93,8 @@ static CLLocationDistance const kInvalidDistance = -1;
     }
 
     const MKCoordinateSpan span = MKCoordinateSpanMake(maxLat - minLat, maxLon - minLon);
-    const CLLocationCoordinate2D center = CLLocationCoordinate2DMake((maxLat - span.latitudeDelta / 2.),
-                                                                     (maxLon - span.longitudeDelta / 2.));
+    const CLLocationCoordinate2D center = CLLocationCoordinate2DMake((minLat + maxLat) / 2.,
+                                                                     (minLon + maxLon) / 2.);
 
     return MKCoordinateRegionMake(center, span);
 }
